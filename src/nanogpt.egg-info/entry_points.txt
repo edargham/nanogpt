@@ -1,0 +1,2 @@
+[console_scripts]
+nanogpt = nanogpt.__main__:main
