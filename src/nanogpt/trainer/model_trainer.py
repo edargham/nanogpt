@@ -85,7 +85,7 @@ class ModelTrainer:
         for epoch in range(epochs):
             with tqdm(total=1, desc=f"Epoch {epoch+1}/{epochs}", leave=True, unit="step") as pbar:
                 self.model.train()
-                current_x, current_y = make_batches(train_data, self.batch_size)
+                current_x, current_y = make_batches(train_data, self.batch_size, self.context_length)
 
                 loss = self._perform_step(current_x, current_y)
                 self.optimizer.zero_grad(set_to_none=True)

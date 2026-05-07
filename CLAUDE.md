@@ -37,4 +37,3 @@ This is an in-progress character-level GPT implementation. The source lives unde
 ## Known issues / design notes
 
 - `make_batches` always resets `torch.manual_seed(1337)` before sampling, so every call returns the same batch. This is intentional during early development but must be removed for real training.
-- `ModelTrainer.train` calls `make_batches` without passing `context_length` on the training step (only on the validation step), so training always uses the default `context_length=8`. This is in `_perform_step`'s caller, not in `_perform_step` itself.
