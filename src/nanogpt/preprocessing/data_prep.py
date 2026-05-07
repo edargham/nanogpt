@@ -30,7 +30,7 @@ def split_data(data: torch.Tensor, train_size: float = 0.8) -> Tuple[torch.Tenso
     Returns:
         A tuple ``(train, val)`` of contiguous tensor slices.
     """
-    n = train_size*len(data)
+    n = int(train_size*len(data))
     return data[:n], data[n:]
 
 def make_batches(data: torch.Tensor, batch_size: int=4, context_length: int=8) -> Tuple[torch.Tensor, torch.Tensor]:
