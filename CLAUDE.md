@@ -22,18 +22,20 @@ This is an in-progress character-level GPT implementation. The source lives unde
 - `data_prep.py`:
   - `create_dataset(corpus)` — encodes the full corpus into a `torch.long` tensor and returns `(data, vocab)`
   - `split_data(data, train_size=0.8)` — splits the encoded tensor into train/validation portions
-  - `make_batches(data, batch_size=4, context_length=8)` — samples random `(x, y)` batch pairs; hardcodes `torch.manual_seed(1337)` (intentional for reproducibility during development)
+  - `make_batches(data, batch_size, context_length)` — samples random `(x, y)` batch pairs; hardcodes `torch.manual_seed(1337)` (intentional for reproducibility during development)
 
 **`src/nanogpt/models/`** — model definitions:
-- `bigramlm.py`: `BiGramLM(nn.Module)` — a simple bigram language model backed by a single `nn.Embedding` of shape `(vocab_size, vocab_size)`. `forward(x)` returns raw logits of shape `(B, T, vocab_size)`. Sets `torch.manual_seed(1337)` at init.
+- `baselm.py`: `BaseLM(nn.Module, ABC)` — abstract base class all models must implement. Declares two abstract methods: `forward(x)` and `generate(x, max_new_tokens)`.
+- `bigramlm.py`: `BiGramLM(BaseLM)` — a bigram language model backed by a single `nn.Embedding` of shape `(vocab_size, vocab_size)`. `forward(x)` returns raw logits `(B, T, vocab_size)`. `generate(x, max_new_tokens)` autoregressively samples tokens by taking the last timestep's logits, applying softmax, and sampling via `torch.multinomial`. Sets `torch.manual_seed(1337)` at init.
 
 **`src/nanogpt/trainer/`** — training loop:
-- `model_trainer.py`: `ModelTrainer` — wraps a model, loss function, and optimizer. `_perform_step(x, y)` handles device transfer, forward pass, logit reshaping to `(B*T, C)`, and loss computation. `train(train_data, epochs, val_data=None)` iterates epochs, delegating to `_perform_step` for both the training and optional validation pass, then back-propagates and updates parameters. Progress is shown via a per-epoch `tqdm` bar.
+- `model_trainer.py`: `ModelTrainer` — wraps a `BaseLM`, loss function, optimizer, `batch_size`, and `context_length`. `_perform_step(x, y)` handles device transfer, forward pass, logit reshaping to `(B*T, C)`, and loss computation. `train(train_data, epochs, val_data=None)` iterates epochs, calling `make_batches` each step using the stored `batch_size`/`context_length`, back-propagates, and updates parameters. Progress is shown via a per-epoch `tqdm` bar.
 
-**`src/nanogpt/__main__.py`** — entry point: loads Shakespeare corpus → tokenizes → encodes → splits → instantiates `BiGramLM` + `ModelTrainer` → trains for 100 epochs with `AdamW(lr=1e-3)` and `CrossEntropyLoss`. Device selection prefers CUDA, then MPS, then CPU.
+**`src/nanogpt/__main__.py`** — entry point: loads Shakespeare corpus → tokenizes → encodes → splits → instantiates `BiGramLM` + `ModelTrainer` (batch_size=32, context_length=8) → trains for 10,000 epochs with `AdamW(lr=1e-3)` and `CrossEntropyLoss` → calls `model.generate()` to produce 1,000 characters and prints decoded output. Device selection prefers CUDA, then MPS, then CPU.
 
 **`data/shakespeare.txt`** — the training corpus (Tiny Shakespeare dataset).
 
 ## Known issues / design notes
 
 - `make_batches` always resets `torch.manual_seed(1337)` before sampling, so every call returns the same batch. This is intentional during early development but must be removed for real training.
+- New models must subclass `BaseLM` and implement both `forward` and `generate`.

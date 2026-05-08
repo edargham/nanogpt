@@ -1,6 +1,6 @@
 """Entry point for the NanoGPT package."""
 
-from .preprocessing import create_dataset, create_vocab_set, read_text, split_data
+from .preprocessing import create_dataset, create_vocab_set, decode, read_text, split_data
 from .models import BiGramLM
 from .trainer import ModelTrainer
 
@@ -9,9 +9,14 @@ from torch import nn
 
 
 def main():
-    """Load the Shakespeare corpus, tokenize it, and print diagnostic output."""
+    """Load the Shakespeare corpus, train a BiGramLM, and generate sample text.
+
+    Reads ``data/shakespeare.txt``, encodes it into token indices, splits into
+    train/validation sets, trains a ``BiGramLM`` with ``ModelTrainer`` for
+    10,000 epochs, then decodes and prints 1,000 generated characters.
+    """
     corpus = read_text('data/shakespeare.txt')
-    print(corpus)
+    print('Data loaded successfully.')
 
     vocab = create_vocab_set(corpus)
     print(''.join(vocab))
@@ -39,9 +44,14 @@ def main():
 
     trainer.train(
         train,
-        epochs=100,
+        epochs=10000,
         val_data=val,
     )
+
+    print(decode(
+        model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 1000)[0].tolist(),
+        vocab
+    ))
 
 if __name__ == '__main__':
     main()

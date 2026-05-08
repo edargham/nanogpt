@@ -6,7 +6,7 @@ from torch import nn
 from tqdm import tqdm
 
 from ..preprocessing import make_batches
-from ..models import BiGramLM
+from ..models import BaseLM
 
 
 class ModelTrainer:
@@ -23,7 +23,7 @@ class ModelTrainer:
 
     def __init__(
         self,
-        model: BiGramLM,
+        model: BaseLM,
         loss: nn.Module,
         optimizer: torch.optim.Optimizer,
         batch_size: int,
