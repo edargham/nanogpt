@@ -35,9 +35,9 @@ def main():
 
     model = BiGramLM(
         len(vocab),
-        32,
-        context_length=context_length,
-        device=device
+        # 32,
+        # context_length=context_length,
+        # device=device
     )
 
     trainer = ModelTrainer(
@@ -51,7 +51,7 @@ def main():
 
     trainer.train(
         train,
-        epochs=3000,
+        epochs=10000,
         val_data=val,
     )
 

@@ -77,7 +77,14 @@ class ModelTrainer:
         self.model.train()
         return losses.mean().item()
 
-    def train(self, train_data: torch.Tensor, epochs: int, val_data: torch.Tensor = None):
+    def train(
+        self,
+        train_data: torch.Tensor,
+        epochs: int,
+        val_data: torch.Tensor = None,
+        eval_interval: int = 300,
+        eval_iters: int = 200
+    ):
         """Run the training loop for a fixed number of epochs.
 
         Each epoch samples one batch from ``train_data`` and delegates the
@@ -90,16 +97,14 @@ class ModelTrainer:
             train_data: 1-D tensor of encoded training token indices.
             epochs: Number of training epochs to run.
             val_data: Optional 1-D tensor of encoded validation token indices.
+            eval_interval: Number of training steps between evaluations.
+            eval_iters: Number of training steps between evaluations.
         """
         val_loss = float('nan')
-        train_loss_est = float('nan')
-        eval_interval = 300
-        eval_iters = 200
 
         with tqdm(total=epochs, desc="Training", unit="step") as pbar:
             self.model.train()
             for epoch in range(epochs):
-                # Training step
                 self.optimizer.zero_grad(set_to_none=True)
                 current_x, current_y = make_batches(train_data, self.batch_size, self.context_length)
                 loss = self._perform_step(current_x, current_y)
@@ -114,8 +119,8 @@ class ModelTrainer:
 
                     # Update bar every step
                     postfix = {
-                        "loss": f"{train_loss_est:.4f}" if not isinstance(train_loss_est, float) or not __import__(
-                            'math').isnan(train_loss_est) else "...",
+                        "loss": f"{train_loss_est:.4f}" if not isinstance(train_loss_est, float)
+                                                           or not math.isnan(train_loss_est) else "...",
                         "val_loss": f"{val_loss:.4f}" if val_data is not None and not math.isnan(
                             val_loss) else ("..." if val_data is not None else None),
                     }
