@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d6e9373-dcf1-4bb8-8239-a3833e270138" name="Changes" comment="Added model inference with BiGramLM and a model trainer class.">
-      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/baselm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/nanogpt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/nanogpt.iml" afterDir="false" />
+    <list default="true" id="3d6e9373-dcf1-4bb8-8239-a3833e270138" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/layers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/layers/self_attention.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nanogpt/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/__main__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nanogpt/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/models/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nanogpt/models/bigramlm.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/models/bigramlm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nanogpt/preprocessing/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/preprocessing/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/nanogpt/trainer/model_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/trainer/model_trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +120,8 @@
       <workItem from="1778004358565" duration="3928000" />
       <workItem from="1778038794069" duration="17294000" />
       <workItem from="1778196148002" duration="3000" />
-      <workItem from="1778196153040" duration="4843000" />
+      <workItem from="1778196153040" duration="8973000" />
+      <workItem from="1778556710335" duration="3427000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -158,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778196072872</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Make the bigramlm.py derive a base model class. Add decoding logic after training.">
+      <option name="closed" value="true" />
+      <created>1778267274271</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1778267274271</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,10 +172,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Added model inference with BiGramLM and a model trainer class." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added model inference with BiGramLM and a model trainer class." />
+    <MESSAGE value="Make the bigramlm.py derive a base model class. Add decoding logic after training." />
+    <option name="LAST_COMMIT_MESSAGE" value="Make the bigramlm.py derive a base model class. Add decoding logic after training." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/NanoGPT$nanogpt.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778266798444" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NanoGPT$nanogpt.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778560628403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NanoGPT$__main__.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778196132746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -1,6 +1,7 @@
 """Bigram language model."""
 
 from .baselm import BaseLM
+from .layers import SelfAttention
 
 import torch
 import torch.nn as nn
@@ -16,12 +17,24 @@ class BiGramLM(BaseLM):
     Args:
         vocab_size: Number of unique tokens in the character vocabulary.
     """
-    def __init__(self, vocab_size: int):
+    def __init__(
+        self,
+        vocab_size: int,
+        num_embed: int,
+        context_length:int,
+        device: torch.device
+    ):
         super().__init__()
         torch.manual_seed(1337)
         self.vocab_size = vocab_size
+        self.num_embed = num_embed
+        self.context_length = context_length
+        self.device = device
 
-        self.token_embedding_tbl = nn.Embedding(self.vocab_size, self.vocab_size)
+        self.token_embedding_tbl = nn.Embedding(self.vocab_size, self.num_embed)
+        self.position_embedding_tbl = nn.Embedding(self.context_length, self.num_embed)
+        self.attention = SelfAttention(32, num_embed=self.num_embed, context_length=self.context_length)
+        self.head = nn.Linear(self.num_embed, self.vocab_size)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Compute next-token logits for a batch of token sequences.
@@ -32,7 +45,13 @@ class BiGramLM(BaseLM):
         Returns:
             Raw logits of shape ``(B, T, vocab_size)``.
         """
-        x = self.token_embedding_tbl(x)
+        b, t = x.shape
+        toks = self.token_embedding_tbl(x)
+        pos = self.position_embedding_tbl(torch.arange(t, device=self.device))
+        x = toks + pos
+        x = self.attention(x) 
+        x = self.head(x)
+
         return x
 
     def generate(self, x: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
@@ -49,7 +68,8 @@ class BiGramLM(BaseLM):
             Extended token indices of shape ``(B, T + max_new_tokens)``.
         """
         for _ in range(max_new_tokens):
-            logits = self(x)
+            x_cond = x[:, -self.context_length:]
+            logits = self(x_cond)
             logits = logits[:, -1, :]
             probs = fnc.softmax(logits, dim=-1)
             x_nxt = torch.multinomial(probs, 1)

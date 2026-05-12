@@ -15,6 +15,8 @@ def main():
     train/validation sets, trains a ``BiGramLM`` with ``ModelTrainer`` for
     10,000 epochs, then decodes and prints 1,000 generated characters.
     """
+    context_length = 8
+
     corpus = read_text('data/shakespeare.txt')
     print('Data loaded successfully.')
 
@@ -31,14 +33,19 @@ def main():
 
     print(f'Using device: {device_str}')
 
-    model = BiGramLM(len(vocab))
+    model = BiGramLM(
+        len(vocab),
+        32,
+        context_length=context_length,
+        device=device
+    )
 
     trainer = ModelTrainer(
         model,
         nn.CrossEntropyLoss(),
         torch.optim.AdamW(model.parameters(), lr=1e-3),
         batch_size=32,
-        context_length=8,
+        context_length=context_length,
         device=device
     )
 
