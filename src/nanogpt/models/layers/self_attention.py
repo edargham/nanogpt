@@ -6,10 +6,7 @@ import numpy as np
 class SelfAttention(nn.Module):
     def __init__(self, num_heads: int, num_embed: int, context_length: int, mask:bool = True):
         super().__init__()
-        self.num_heads = num_heads
-        self.num_embed = num_embed
-        self.context_length = context_length
-        self.mask = mask
+        self.register_buffer('mask', torch.tensor(mask, dtype=torch.bool))
 
         self.key_linear = nn.Linear(num_embed, num_heads, bias=False)
         self.query_linear = nn.Linear(num_embed, num_heads, bias=False)
@@ -23,10 +20,10 @@ class SelfAttention(nn.Module):
         k = self.key_linear(x)
         q = self.query_linear(x)
 
-        w = q@k.transpose(-2, -1) * c**-0.5
+        w = q @ k.transpose(-2, -1) * c**-0.5
 
         if self.mask:
-            w = w.masked_fill(self.tril[:t, :t] == 0, -np.inf)
+            w = w.masked_fill(self.tril[:t, :t] == 0, float('-inf'))
 
         w = nn.functional.softmax(w, dim=-1)
 

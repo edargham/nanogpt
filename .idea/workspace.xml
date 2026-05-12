@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d6e9373-dcf1-4bb8-8239-a3833e270138" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/layers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/layers/self_attention.py" afterDir="false" />
+    <list default="true" id="3d6e9373-dcf1-4bb8-8239-a3833e270138" name="Changes" comment="Add self-attention">
+      <change afterPath="$PROJECT_DIR$/src/nanogpt/models/gpt_draft.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nanogpt/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/__main__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/nanogpt/models/bigramlm.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/models/bigramlm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nanogpt/models/layers/self_attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/models/layers/self_attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nanogpt/trainer/model_trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/nanogpt/trainer/model_trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,24 +48,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.__main__.executor&quot;: &quot;Run&quot;,
-    &quot;Python.nanogpt.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.__main__.executor": "Run",
+    "Python.nanogpt.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/edargham/PycharmProjects/NanoGPT/src/nanogpt/models",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/nanogpt/models" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/nanogpt" />
       <recent name="$PROJECT_DIR$" />
@@ -121,7 +126,7 @@
       <workItem from="1778038794069" duration="17294000" />
       <workItem from="1778196148002" duration="3000" />
       <workItem from="1778196153040" duration="8973000" />
-      <workItem from="1778556710335" duration="3427000" />
+      <workItem from="1778556710335" duration="8391000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -163,7 +168,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778267274271</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add self-attention">
+      <option name="closed" value="true" />
+      <created>1778606337079</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1778606337079</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,10 +186,11 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Added model inference with BiGramLM and a model trainer class." />
     <MESSAGE value="Make the bigramlm.py derive a base model class. Add decoding logic after training." />
-    <option name="LAST_COMMIT_MESSAGE" value="Make the bigramlm.py derive a base model class. Add decoding logic after training." />
+    <MESSAGE value="Add self-attention" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add self-attention" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/NanoGPT$nanogpt.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778560628403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NanoGPT$nanogpt.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778611092469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NanoGPT$__main__.coverage" NAME="nanogpt Coverage Results" MODIFIED="1778196132746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

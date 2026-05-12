@@ -26,7 +26,7 @@ def main():
     data, _ = create_dataset(corpus)
     print(data, f'dtype: {data.dtype}', f'shape: {data.shape}')
 
-    train, val = split_data(data, 0.8)
+    train, val = split_data(data, 0.9)
 
     device_str = 'cuda' if torch.cuda.is_available() else 'mps' if torch.mps.is_available() else 'cpu'
     device = torch.device(device_str)
@@ -35,15 +35,12 @@ def main():
 
     model = BiGramLM(
         len(vocab),
-        32,
-        context_length=context_length,
-        device=device
     )
 
     trainer = ModelTrainer(
         model,
         nn.CrossEntropyLoss(),
-        torch.optim.AdamW(model.parameters(), lr=1e-3),
+        torch.optim.AdamW(model.parameters(), lr=1e-2),
         batch_size=32,
         context_length=context_length,
         device=device
@@ -51,12 +48,12 @@ def main():
 
     trainer.train(
         train,
-        epochs=10000,
+        epochs=3000,
         val_data=val,
     )
 
     print(decode(
-        model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 1000)[0].tolist(),
+        model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist(),
         vocab
     ))
 

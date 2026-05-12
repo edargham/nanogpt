@@ -65,6 +65,16 @@ class ModelTrainer:
 
         return loss
 
+    @torch.no_grad()
+    def _estimate_loss(self, data: torch.Tensor, eval_iters: int = 200) -> float:
+        """Average loss over eval_iters random batches."""
+        self.model.eval()
+        losses = torch.zeros(eval_iters)
+        for k in range(eval_iters):
+            x, y = make_batches(data, self.batch_size, self.context_length)
+            losses[k] = self._perform_step(x, y).item()
+        self.model.train()
+        return losses.mean().item()
 
     def train(self, train_data: torch.Tensor, epochs: int, val_data: torch.Tensor = None):
         """Run the training loop for a fixed number of epochs.
@@ -80,26 +90,38 @@ class ModelTrainer:
             epochs: Number of training epochs to run.
             val_data: Optional 1-D tensor of encoded validation token indices.
         """
-        val_loss = 0.0
+        val_loss = float('nan')
+        train_loss_est = float('nan')
+        eval_interval = 300
+        eval_iters = 200
 
-        for epoch in range(epochs):
-            with tqdm(total=1, desc=f"Epoch {epoch+1}/{epochs}", leave=True, unit="step") as pbar:
-                self.model.train()
-                current_x, current_y = make_batches(train_data, self.batch_size, self.context_length)
-
-                loss = self._perform_step(current_x, current_y)
+        with tqdm(total=epochs, desc="Training", unit="step") as pbar:
+            self.model.train()
+            for epoch in range(epochs):
+                # Training step
                 self.optimizer.zero_grad(set_to_none=True)
-
+                current_x, current_y = make_batches(train_data, self.batch_size, self.context_length)
+                loss = self._perform_step(current_x, current_y)
                 loss.backward()
                 self.optimizer.step()
 
-                if val_data is not None:
-                    self.model.eval()
-                    current_x, current_y = make_batches(val_data, self.batch_size, self.context_length)
-                    val_loss = self._perform_step(current_x, current_y)
+                # Averaged loss estimation at fixed interval
+                if (epoch + 1) % eval_interval == 0:
+                    train_loss_est = self._estimate_loss(train_data, eval_iters)
+                    if val_data is not None:
+                        val_loss = self._estimate_loss(val_data, eval_iters)
 
-                postfix = {"loss": f"{loss.item():.4f}"}
-                if val_data is not None:
-                    postfix["val_loss"] = f"{val_loss:.4f}"
-                pbar.set_postfix(postfix)
+                    # Update bar every step
+                    postfix = {
+                        "loss": f"{train_loss_est:.4f}" if not isinstance(train_loss_est, float) or not __import__(
+                            'math').isnan(train_loss_est) else "...",
+                        "val_loss": f"{val_loss:.4f}" if val_data is not None and not __import__('math').isnan(
+                            val_loss) else ("..." if val_data is not None else None),
+                    }
+
+                    # Drop val_loss key entirely if no val_data
+                    if val_data is None:
+                        postfix.pop("val_loss")
+
+                    pbar.set_postfix(postfix)
                 pbar.update(1)
