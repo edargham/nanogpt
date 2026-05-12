@@ -6,7 +6,7 @@ from .trainer import ModelTrainer
 
 import torch
 from torch import nn
-
+torch.manual_seed(1337)
 
 def main():
     """Load the Shakespeare corpus, train a BiGramLM, and generate sample text.
@@ -35,6 +35,9 @@ def main():
 
     model = BiGramLM(
         len(vocab),
+        32,
+        context_length=context_length,
+        device=device
     )
 
     trainer = ModelTrainer(

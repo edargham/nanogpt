@@ -1,7 +1,6 @@
 """Bigram language model."""
 
 from .baselm import BaseLM
-from .layers import SelfAttention
 
 import torch
 import torch.nn as nn

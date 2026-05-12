@@ -3,6 +3,7 @@
 import torch
 from torch import nn
 
+import math
 from tqdm import tqdm
 
 from ..preprocessing import make_batches
@@ -115,7 +116,7 @@ class ModelTrainer:
                     postfix = {
                         "loss": f"{train_loss_est:.4f}" if not isinstance(train_loss_est, float) or not __import__(
                             'math').isnan(train_loss_est) else "...",
-                        "val_loss": f"{val_loss:.4f}" if val_data is not None and not __import__('math').isnan(
+                        "val_loss": f"{val_loss:.4f}" if val_data is not None and not math.isnan(
                             val_loss) else ("..." if val_data is not None else None),
                     }
 

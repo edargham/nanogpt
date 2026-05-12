@@ -49,7 +49,6 @@ def make_batches(data: torch.Tensor, batch_size: int=4, context_length: int=8) -
         A tuple ``(x, y)`` of shape ``(batch_size, context_length)``, where
         ``y[i, t]`` is the token that follows ``x[i, t]`` in the corpus.
     """
-    torch.manual_seed(1337)
     ix = torch.randint(len(data) - context_length, (batch_size,))
     x = torch.stack([data[i:i+context_length] for i in ix])
     y = torch.stack([data[i+1:i+context_length+1] for i in ix])
