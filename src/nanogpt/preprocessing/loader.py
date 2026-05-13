@@ -1,3 +1,6 @@
+"""Utilities for reading raw text data from disk."""
+
+
 def read_text(path: str) -> str:
     """Read the full contents of a text file from disk.
 

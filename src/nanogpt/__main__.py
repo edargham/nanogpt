@@ -9,18 +9,20 @@ from torch import nn
 torch.manual_seed(1337)
 
 def main():
-    """Load the Shakespeare corpus, train a BiGramLM, and generate sample text.
+    """Load the Shakespeare corpus, train a NanoGPT model, and generate sample text.
 
     Reads ``data/shakespeare.txt``, encodes it into token indices, splits into
-    train/validation sets, trains a ``BiGramLM`` with ``ModelTrainer`` for
-    5,000 epochs, then decodes and prints 1,000 generated characters.
+    a 90/10 train/validation split, trains a ``NanoGPT`` transformer with
+    ``ModelTrainer`` for 5,000 epochs, then decodes and prints 500 generated
+    characters.
     """
-    context_length = 8
-    num_embeddings = 32
+    context_length = 128
+    num_embeddings = 192
     num_attn_heads = 4
+    num_layers = 4
 
     batch_size = 32
-    lr = 1e-2
+    lr = 3e-4
     epochs = 5000
 
     num_tokens_to_generate = 500
@@ -29,10 +31,10 @@ def main():
     print('Data loaded successfully.')
 
     vocab = create_vocab_set(corpus)
-    print(''.join(vocab))
+    print('Vocab: ', ''.join(vocab))
 
     data, _ = create_dataset(corpus)
-    print(data, f'dtype: {data.dtype}', f'shape: {data.shape}')
+    print('Final Encoded Dataset: ', data, f'dtype: {data.dtype}', f'shape: {data.shape}')
 
     train, val = split_data(data, 0.9)
 
@@ -46,6 +48,7 @@ def main():
         num_embed=num_embeddings,
         context_length=context_length,
         num_heads=num_attn_heads,
+        num_layers=num_layers,
         device=device,
     )
 

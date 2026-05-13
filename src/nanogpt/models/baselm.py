@@ -40,7 +40,7 @@ class BaseLM(nn.Module, ABC):
             Extended token indices of shape ``(B, T + max_new_tokens)``.
         """
         for _ in range(max_new_tokens):
-            x_cond = x[:, -self.context_length:] if self.context_length else x
+            x_cond = x[:, -self.context_length:] if scope_context else x
             logits = self(x_cond)
             logits = logits[:, -1, :]
             probs = fnc.softmax(logits, dim=-1)

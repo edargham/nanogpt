@@ -35,15 +35,16 @@ class BiGramLM(BaseLM):
         return self.token_embedding_tbl(x)
 
     def generate(self, x: torch.Tensor, max_new_tokens: int, scope_context: bool = False) -> torch.Tensor:
-        """Autoregressively extend a token sequence using bigram probabilities.
+        """Autoregressively extend a token sequence.
 
-        At each step takes the last timestep's logits, applies softmax, samples
-        the next token via ``torch.multinomial``, and appends it to the sequence.
+        Delegates to ``BaseLM.generate``. Context scoping is disabled by
+        default since the bigram model has no fixed context length.
 
         Args:
             x: Seed token indices of shape ``(B, T)``.
             max_new_tokens: Number of tokens to append to each sequence.
-            scope_context: Whether or not to scope to windows of context length.
+            scope_context: Whether to restrict the input to a context window.
+                Defaults to ``False``.
 
         Returns:
             Extended token indices of shape ``(B, T + max_new_tokens)``.
