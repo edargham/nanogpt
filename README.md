@@ -88,7 +88,7 @@ NanoGPT/
 Install dependencies:
 
 ```bash
-pip install torch tqdm numpy
+pip install -r requirements.txt
 ```
 
 ---
