@@ -34,7 +34,7 @@ class BiGramLM(BaseLM):
         """
         return self.token_embedding_tbl(x)
 
-    def generate(self, x: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
+    def generate(self, x: torch.Tensor, max_new_tokens: int, scope_context: bool = False) -> torch.Tensor:
         """Autoregressively extend a token sequence using bigram probabilities.
 
         At each step takes the last timestep's logits, applies softmax, samples
@@ -43,15 +43,9 @@ class BiGramLM(BaseLM):
         Args:
             x: Seed token indices of shape ``(B, T)``.
             max_new_tokens: Number of tokens to append to each sequence.
+            scope_context: Whether or not to scope to windows of context length.
 
         Returns:
             Extended token indices of shape ``(B, T + max_new_tokens)``.
         """
-        for _ in range(max_new_tokens):
-            logits = self(x)
-            logits = logits[:, -1, :]
-            probs = fnc.softmax(logits, dim=-1)
-            x_nxt = torch.multinomial(probs, 1)
-            x = torch.cat((x, x_nxt), dim=1)
-
-        return x
+        return super().generate(x, max_new_tokens, scope_context)

@@ -1,7 +1,7 @@
 """Entry point for the NanoGPT package."""
 
 from .preprocessing import create_dataset, create_vocab_set, decode, read_text, split_data
-from .models import BiGramLM
+from .models import NanoGPT
 from .trainer import ModelTrainer
 
 import torch
@@ -13,9 +13,17 @@ def main():
 
     Reads ``data/shakespeare.txt``, encodes it into token indices, splits into
     train/validation sets, trains a ``BiGramLM`` with ``ModelTrainer`` for
-    10,000 epochs, then decodes and prints 1,000 generated characters.
+    5,000 epochs, then decodes and prints 1,000 generated characters.
     """
     context_length = 8
+    num_embeddings = 32
+    num_attn_heads = 4
+
+    batch_size = 32
+    lr = 1e-2
+    epochs = 5000
+
+    num_tokens_to_generate = 500
 
     corpus = read_text('data/shakespeare.txt')
     print('Data loaded successfully.')
@@ -33,30 +41,31 @@ def main():
 
     print(f'Using device: {device_str}')
 
-    model = BiGramLM(
+    model = NanoGPT(
         len(vocab),
-        # 32,
-        # context_length=context_length,
-        # device=device
+        num_embed=num_embeddings,
+        context_length=context_length,
+        num_heads=num_attn_heads,
+        device=device,
     )
 
     trainer = ModelTrainer(
         model,
         nn.CrossEntropyLoss(),
-        torch.optim.AdamW(model.parameters(), lr=1e-2),
-        batch_size=32,
+        torch.optim.AdamW(model.parameters(), lr=lr),
+        batch_size=batch_size,
         context_length=context_length,
         device=device
     )
 
     trainer.train(
         train,
-        epochs=10000,
+        epochs=epochs,
         val_data=val,
     )
 
     print(decode(
-        model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), 500)[0].tolist(),
+        model.generate(torch.zeros((1, 1), dtype=torch.long, device=device), num_tokens_to_generate)[0].tolist(),
         vocab
     ))
 
